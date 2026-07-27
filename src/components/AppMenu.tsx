@@ -243,7 +243,7 @@ function RootPanel({
       <Group title="Personnalisation IA">
         <Row icon={<ImageIcon className="w-[18px] h-[18px] text-fuchsia-300" />} label="Thème & Fond IA" sublabel="Générer avec l'intelligence artificielle" onClick={() => goto("theme")} />
         <Row icon={<Palette className="w-[18px] h-[18px] text-sky-300" />} label="Palette de couleurs IA" sublabel="Générer une palette avec l'IA" onClick={() => goto("theme")} />
-        <Row icon={<Languages className="w-[18px] h-[18px] text-teal-300" />} label="Langue" sublabel={p.language === "en" ? "English" : "Français"} onClick={() => goto("language")} />
+        
       </Group>
 
       <Group title="Contenu">
