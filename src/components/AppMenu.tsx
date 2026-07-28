@@ -889,8 +889,18 @@ function PrivacyPanel() {
       </ul>
       <button
         onClick={() => {
-          localStorage.clear();
-          toast.success("Données locales effacées");
+          try {
+            // Preserve saved-accounts of OTHER users on this shared device.
+            const preserved = localStorage.getItem("jh.savedAccounts.v1");
+            const keysToClear: string[] = [];
+            for (let i = 0; i < localStorage.length; i++) {
+              const k = localStorage.key(i);
+              if (k && k !== "jh.savedAccounts.v1") keysToClear.push(k);
+            }
+            keysToClear.forEach((k) => localStorage.removeItem(k));
+            if (preserved) localStorage.setItem("jh.savedAccounts.v1", preserved);
+          } catch { /* no-op */ }
+          toast.success("Vos données locales ont été effacées");
           setTimeout(() => location.reload(), 400);
         }}
         className="w-full mt-2 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-200 py-3 text-sm font-semibold hover:bg-amber-500/15"
