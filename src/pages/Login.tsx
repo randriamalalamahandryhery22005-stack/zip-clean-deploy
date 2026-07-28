@@ -257,12 +257,15 @@ const Login = () => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleRemove(acc.userId);
+                        if (window.confirm(`Retirer ${acc.displayName} de cet appareil ?`)) {
+                          handleRemove(acc.userId);
+                        }
                       }}
-                      className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/50 border border-[hsl(var(--gold)/0.2)] flex items-center justify-center text-foreground/60 hover:text-destructive hover:border-destructive/50 opacity-0 group-hover:opacity-100 focus:opacity-100 transition"
-                      aria-label={`Retirer ${acc.displayName}`}
+                      className="absolute -top-1.5 -right-1.5 w-7 h-7 rounded-full bg-[hsl(158_60%_5%)] border border-destructive/60 flex items-center justify-center text-destructive shadow-lg hover:bg-destructive hover:text-white active:scale-90 transition z-10"
+                      aria-label={`Supprimer ${acc.displayName} de cet appareil`}
+                      title="Supprimer ce compte de l'appareil"
                     >
-                      <X className="w-3 h-3" />
+                      <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </li>
                 ))}
