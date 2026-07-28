@@ -15,14 +15,11 @@ import {
   ShieldCheck,
   X,
   Plus,
-  ChevronRight,
-  Search,
+  Trash2,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import jhLogo from "@/assets/jh-logo.png";
-import AccountSearch from "@/components/AccountSearch";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
   getSavedAccounts,
   removeSavedAccount,
