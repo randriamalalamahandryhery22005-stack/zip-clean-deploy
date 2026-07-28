@@ -39,7 +39,12 @@ import {
   Volume2,
   RotateCcw,
   Video as VideoIcon,
+  Globe,
+  Store,
+  Crown,
+  Gamepad2,
 } from "lucide-react";
+
 import { useAuth } from "@/contexts/AuthContext";
 import {
   readPersonalization,
@@ -216,6 +221,22 @@ function RootPanel({
   const displayName = profile?.full_name || profile?.name || user?.email?.split("@")[0] || "Invité";
   const initial = (displayName || "?").charAt(0).toUpperCase();
 
+  // Informations manquantes du profil → notification dans Paramètres > Compte
+  const missingProfileFields = useMemo(() => {
+    if (!user || !profile) return [] as string[];
+    const checks: Array<[string, unknown]> = [
+      ["nom complet", profile.full_name],
+      ["photo de profil", profile.avatar_url],
+      ["date de naissance", (profile as any).birth_date],
+      ["pays", (profile as any).country_code],
+      ["région", (profile as any).region],
+      ["téléphone", (profile as any).phone],
+      ["sexe", (profile as any).gender],
+    ];
+    return checks.filter(([, v]) => !v || String(v).trim() === "").map(([k]) => k);
+  }, [user, profile]);
+
+
   return (
     <div className="space-y-1">
       <button
@@ -234,17 +255,48 @@ function RootPanel({
         <ChevronRight className="w-4 h-4 text-slate-400" />
       </button>
 
+      {user && missingProfileFields.length > 0 && (
+        <button
+          onClick={() => { onClose(); navigate("/profile"); }}
+          className="mb-2 w-full flex items-start gap-3 rounded-2xl p-3.5 bg-amber-500/10 border border-amber-400/30 hover:bg-amber-500/15 transition text-left"
+        >
+          <span className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center shrink-0">
+            <Bell className="w-4 h-4 text-amber-300" />
+          </span>
+          <span className="flex-1 min-w-0">
+            <span className="block text-[13px] font-semibold text-amber-100">
+              Profil incomplet
+            </span>
+            <span className="block text-[11px] text-amber-200/70 mt-0.5">
+              À compléter : {missingProfileFields.join(", ")}
+            </span>
+          </span>
+          <ChevronRight className="w-4 h-4 text-amber-300 mt-1" />
+        </button>
+      )}
+
       <Group title="Compte">
         <Row icon={<User className="w-[18px] h-[18px] text-amber-300" />} label="Profil" onClick={() => goto("profile")} />
+
         <Row icon={<Settings className="w-[18px] h-[18px] text-emerald-300" />} label="Paramètres" onClick={() => goto("settings")} />
         <Row icon={<Bell className="w-[18px] h-[18px] text-amber-300" />} label="Notifications" onClick={() => goto("notifications")} />
+        {user && (
+          <Row
+            icon={<Trash2 className="w-[18px] h-[18px] text-red-400" />}
+            label="Supprimer mon compte"
+            sublabel="Suppression définitive des données"
+            onClick={() => { onClose(); navigate("/profile#danger"); }}
+          />
+        )}
       </Group>
 
-      <Group title="Personnalisation IA">
-        <Row icon={<ImageIcon className="w-[18px] h-[18px] text-fuchsia-300" />} label="Thème & Fond IA" sublabel="Générer avec l'intelligence artificielle" onClick={() => goto("theme")} />
-        <Row icon={<Palette className="w-[18px] h-[18px] text-sky-300" />} label="Palette de couleurs IA" sublabel="Générer une palette avec l'IA" onClick={() => goto("theme")} />
-        
+      <Group title="Application">
+        <Row icon={<Globe className="w-[18px] h-[18px] text-sky-300" />} label="Langue & région" sublabel="Choisir la langue de l'application" onClick={() => goto("language")} />
+        <Row icon={<Store className="w-[18px] h-[18px] text-amber-300" />} label="J&H Store" sublabel="Contenus et publications" onClick={() => { onClose(); navigate("/gen-store"); }} />
+        <Row icon={<Crown className="w-[18px] h-[18px] text-yellow-300" />} label="Abonnement Premium" sublabel="Gérer votre accès premium" onClick={() => { onClose(); navigate("/premium"); }} />
+        <Row icon={<Gamepad2 className="w-[18px] h-[18px] text-emerald-300" />} label="Jeux & prédictions" sublabel="Accéder au hub des jeux" onClick={() => { onClose(); navigate("/games"); }} />
       </Group>
+
 
       <Group title="Contenu">
         <Row icon={<HistoryIcon className="w-[18px] h-[18px] text-amber-300" />} label="Historique" badge={(p.history?.length ?? 0) || undefined} onClick={() => goto("history")} />
