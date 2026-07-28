@@ -55,7 +55,6 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
-  const [showFinder, setShowFinder] = useState(false);
 
   // « Se souvenir de moi » : on restaure le choix + le dernier identifiant utilisé.
   useEffect(() => {
