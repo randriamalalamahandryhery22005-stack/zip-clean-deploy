@@ -465,7 +465,6 @@ const Login = () => {
               >
                 <UserPlus className="w-4 h-4" />
                 Créer un nouveau compte
-                <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           )}
@@ -476,16 +475,8 @@ const Login = () => {
           </p>
         </div>
       </main>
-
-      <Dialog open={showFinder} onOpenChange={setShowFinder}>
-        <DialogContent className="max-w-md rounded-3xl border-[hsl(var(--gold)/0.25)] bg-[hsl(158_60%_5%)]/97 backdrop-blur-xl">
-          <DialogHeader>
-            <DialogTitle className="font-display gold-text text-lg">Connexion</DialogTitle>
-          </DialogHeader>
-          <AccountSearch onClose={() => setShowFinder(false)} />
-        </DialogContent>
-      </Dialog>
     </div>
+
 
   );
 };
