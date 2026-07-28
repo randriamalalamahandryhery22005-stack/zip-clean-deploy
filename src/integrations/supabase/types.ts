@@ -40,25 +40,34 @@ export type Database = {
       }
       app_config: {
         Row: {
-          config_key: string
+          config: Json | null
+          config_key: string | null
           config_value: Json | null
           id: string
+          is_active: boolean
           updated_at: string
           updated_by: string | null
+          version: number
         }
         Insert: {
-          config_key: string
+          config?: Json | null
+          config_key?: string | null
           config_value?: Json | null
           id?: string
+          is_active?: boolean
           updated_at?: string
           updated_by?: string | null
+          version?: number
         }
         Update: {
-          config_key?: string
+          config?: Json | null
+          config_key?: string | null
           config_value?: Json | null
           id?: string
+          is_active?: boolean
           updated_at?: string
           updated_by?: string | null
+          version?: number
         }
         Relationships: []
       }
@@ -110,6 +119,27 @@ export type Database = {
         }
         Relationships: []
       }
+      chat_message_reads: {
+        Row: {
+          created_at: string
+          id: string
+          message_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       chat_messages: {
         Row: {
           admin_response: string | null
@@ -149,6 +179,48 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_predictions: {
+        Row: {
+          config: Json
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          name: string
+          requires_subscription: boolean
+          slug: string
+          subscription_key: string | null
+          updated_at: string
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          requires_subscription?: boolean
+          slug: string
+          subscription_key?: string | null
+          updated_at?: string
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          requires_subscription?: boolean
+          slug?: string
+          subscription_key?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       football_cache: {
         Row: {
           cache_key: string
@@ -175,6 +247,7 @@ export type Database = {
       }
       game_access: {
         Row: {
+          days_requested: number | null
           expires_at: string | null
           game_mode: string
           granted_at: string
@@ -182,9 +255,12 @@ export type Database = {
           id: string
           is_active: boolean
           payment_proof_url: string | null
+          price_amount: number | null
+          rejection_reason: string | null
           user_id: string
         }
         Insert: {
+          days_requested?: number | null
           expires_at?: string | null
           game_mode: string
           granted_at?: string
@@ -192,9 +268,12 @@ export type Database = {
           id?: string
           is_active?: boolean
           payment_proof_url?: string | null
+          price_amount?: number | null
+          rejection_reason?: string | null
           user_id: string
         }
         Update: {
+          days_requested?: number | null
           expires_at?: string | null
           game_mode?: string
           granted_at?: string
@@ -202,6 +281,8 @@ export type Database = {
           id?: string
           is_active?: boolean
           payment_proof_url?: string | null
+          price_amount?: number | null
+          rejection_reason?: string | null
           user_id?: string
         }
         Relationships: []
@@ -232,40 +313,100 @@ export type Database = {
       }
       gen_store_items: {
         Row: {
+          body: string | null
           category: string | null
           created_at: string
+          created_by: string | null
           description: string | null
+          download_count: number
+          file_name: string | null
+          file_path: string | null
+          file_size: number | null
+          file_url: string | null
           id: string
           image_url: string | null
           is_active: boolean
+          is_published: boolean
+          link_url: string | null
+          mime_type: string | null
           name: string
+          post_type: string | null
           price_coins: number
           stock: number | null
+          title: string | null
           updated_at: string
         }
         Insert: {
+          body?: string | null
           category?: string | null
           created_at?: string
+          created_by?: string | null
           description?: string | null
+          download_count?: number
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          file_url?: string | null
           id?: string
           image_url?: string | null
           is_active?: boolean
+          is_published?: boolean
+          link_url?: string | null
+          mime_type?: string | null
           name: string
+          post_type?: string | null
           price_coins?: number
           stock?: number | null
+          title?: string | null
           updated_at?: string
         }
         Update: {
+          body?: string | null
           category?: string | null
           created_at?: string
+          created_by?: string | null
           description?: string | null
+          download_count?: number
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          file_url?: string | null
           id?: string
           image_url?: string | null
           is_active?: boolean
+          is_published?: boolean
+          link_url?: string | null
+          mime_type?: string | null
           name?: string
+          post_type?: string | null
           price_coins?: number
           stock?: number | null
+          title?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      global_chat_messages: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          message: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          message?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          message?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -320,20 +461,29 @@ export type Database = {
       login_history: {
         Row: {
           created_at: string
+          device_info: string | null
           event_type: string
           id: string
+          ip_address: string | null
+          location: string | null
           user_id: string
         }
         Insert: {
           created_at?: string
+          device_info?: string | null
           event_type: string
           id?: string
+          ip_address?: string | null
+          location?: string | null
           user_id: string
         }
         Update: {
           created_at?: string
+          device_info?: string | null
           event_type?: string
           id?: string
+          ip_address?: string | null
+          location?: string | null
           user_id?: string
         }
         Relationships: []
@@ -419,6 +569,39 @@ export type Database = {
         }
         Relationships: []
       }
+      prediction_logs: {
+        Row: {
+          created_at: string
+          custom_prediction_id: string | null
+          id: string
+          input_params: Json | null
+          mode: string
+          reliability_avg: number | null
+          results: Json | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          custom_prediction_id?: string | null
+          id?: string
+          input_params?: Json | null
+          mode: string
+          reliability_avg?: number | null
+          results?: Json | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          custom_prediction_id?: string | null
+          id?: string
+          input_params?: Json | null
+          mode?: string
+          reliability_avg?: number | null
+          results?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       predictions: {
         Row: {
           created_at: string
@@ -455,8 +638,13 @@ export type Database = {
           bonus_type: string
           claimed_at: string | null
           created_at: string
+          days: number | null
           expires_at: string | null
+          granted_at: string
+          granted_by: string | null
           id: string
+          is_active: boolean
+          reason: string | null
           user_id: string
         }
         Insert: {
@@ -464,8 +652,13 @@ export type Database = {
           bonus_type: string
           claimed_at?: string | null
           created_at?: string
+          days?: number | null
           expires_at?: string | null
+          granted_at?: string
+          granted_by?: string | null
           id?: string
+          is_active?: boolean
+          reason?: string | null
           user_id: string
         }
         Update: {
@@ -473,8 +666,13 @@ export type Database = {
           bonus_type?: string
           claimed_at?: string | null
           created_at?: string
+          days?: number | null
           expires_at?: string | null
+          granted_at?: string
+          granted_by?: string | null
           id?: string
+          is_active?: boolean
+          reason?: string | null
           user_id?: string
         }
         Relationships: []
@@ -483,10 +681,13 @@ export type Database = {
         Row: {
           avatar_url: string | null
           bio: string | null
+          birth_date: string | null
+          country_code: string | null
           created_at: string
           device_id: string | null
           device_info: string | null
           email: string
+          full_name: string | null
           id: string
           is_validated: boolean
           last_seen_at: string | null
@@ -494,17 +695,22 @@ export type Database = {
           login_count: number
           name: string
           phone: string | null
+          region: string | null
           status: string
+          trial_started_at: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           avatar_url?: string | null
           bio?: string | null
+          birth_date?: string | null
+          country_code?: string | null
           created_at?: string
           device_id?: string | null
           device_info?: string | null
           email: string
+          full_name?: string | null
           id?: string
           is_validated?: boolean
           last_seen_at?: string | null
@@ -512,17 +718,22 @@ export type Database = {
           login_count?: number
           name: string
           phone?: string | null
+          region?: string | null
           status?: string
+          trial_started_at?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           avatar_url?: string | null
           bio?: string | null
+          birth_date?: string | null
+          country_code?: string | null
           created_at?: string
           device_id?: string | null
           device_info?: string | null
           email?: string
+          full_name?: string | null
           id?: string
           is_validated?: boolean
           last_seen_at?: string | null
@@ -530,7 +741,9 @@ export type Database = {
           login_count?: number
           name?: string
           phone?: string | null
+          region?: string | null
           status?: string
+          trial_started_at?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -595,25 +808,49 @@ export type Database = {
       }
       user_coins: {
         Row: {
+          balance: number
           coins: number
+          consumption_rate_per_hour: number
           id: string
+          last_consumed_at: string | null
+          plan_expires_at: string | null
+          plan_started_at: string | null
+          plan_type: string | null
+          total_consumed: number
           total_earned: number
+          total_granted: number
           total_spent: number
           updated_at: string
           user_id: string
         }
         Insert: {
+          balance?: number
           coins?: number
+          consumption_rate_per_hour?: number
           id?: string
+          last_consumed_at?: string | null
+          plan_expires_at?: string | null
+          plan_started_at?: string | null
+          plan_type?: string | null
+          total_consumed?: number
           total_earned?: number
+          total_granted?: number
           total_spent?: number
           updated_at?: string
           user_id: string
         }
         Update: {
+          balance?: number
           coins?: number
+          consumption_rate_per_hour?: number
           id?: string
+          last_consumed_at?: string | null
+          plan_expires_at?: string | null
+          plan_started_at?: string | null
+          plan_type?: string | null
+          total_consumed?: number
           total_earned?: number
+          total_granted?: number
           total_spent?: number
           updated_at?: string
           user_id?: string
@@ -622,20 +859,26 @@ export type Database = {
       }
       user_points: {
         Row: {
+          game_name: string | null
           id: string
           points: number
+          reason: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          game_name?: string | null
           id?: string
           points?: number
+          reason?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          game_name?: string | null
           id?: string
           points?: number
+          reason?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -656,6 +899,36 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      voice_calls: {
+        Row: {
+          callee_id: string
+          caller_id: string
+          created_at: string
+          ended_at: string | null
+          id: string
+          started_at: string | null
+          status: string
+        }
+        Insert: {
+          callee_id: string
+          caller_id: string
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          started_at?: string | null
+          status?: string
+        }
+        Update: {
+          callee_id?: string
+          caller_id?: string
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          started_at?: string | null
+          status?: string
         }
         Relationships: []
       }
