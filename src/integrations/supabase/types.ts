@@ -119,23 +119,50 @@ export type Database = {
         }
         Relationships: []
       }
-      chat_message_reads: {
+      chat_message_reactions: {
         Row: {
           created_at: string
+          emoji: string
           id: string
           message_id: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          emoji: string
           id?: string
           message_id: string
           user_id: string
         }
         Update: {
           created_at?: string
+          emoji?: string
           id?: string
           message_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      chat_message_reads: {
+        Row: {
+          created_at: string
+          id: string
+          message_id: string
+          read_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message_id: string
+          read_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message_id?: string
+          read_at?: string
           user_id?: string
         }
         Relationships: []
@@ -143,11 +170,13 @@ export type Database = {
       chat_messages: {
         Row: {
           admin_response: string | null
+          content: string | null
           created_at: string
           game_mode: string
           id: string
           image_url: string | null
           message: string | null
+          reply_to_id: string | null
           responded_at: string | null
           responded_by: string | null
           status: string
@@ -155,11 +184,13 @@ export type Database = {
         }
         Insert: {
           admin_response?: string | null
+          content?: string | null
           created_at?: string
           game_mode: string
           id?: string
           image_url?: string | null
           message?: string | null
+          reply_to_id?: string | null
           responded_at?: string | null
           responded_by?: string | null
           status?: string
@@ -167,11 +198,13 @@ export type Database = {
         }
         Update: {
           admin_response?: string | null
+          content?: string | null
           created_at?: string
           game_mode?: string
           id?: string
           image_url?: string | null
           message?: string | null
+          reply_to_id?: string | null
           responded_at?: string | null
           responded_by?: string | null
           status?: string
@@ -329,7 +362,7 @@ export type Database = {
           is_published: boolean
           link_url: string | null
           mime_type: string | null
-          name: string
+          name: string | null
           post_type: string | null
           price_coins: number
           stock: number | null
@@ -353,7 +386,7 @@ export type Database = {
           is_published?: boolean
           link_url?: string | null
           mime_type?: string | null
-          name: string
+          name?: string | null
           post_type?: string | null
           price_coins?: number
           stock?: number | null
@@ -377,7 +410,7 @@ export type Database = {
           is_published?: boolean
           link_url?: string | null
           mime_type?: string | null
-          name?: string
+          name?: string | null
           post_type?: string | null
           price_coins?: number
           stock?: number | null
@@ -386,26 +419,59 @@ export type Database = {
         }
         Relationships: []
       }
+      gen_store_reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          item_id: string
+          rating: number
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          item_id: string
+          rating?: number
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          item_id?: string
+          rating?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       global_chat_messages: {
         Row: {
+          content: string | null
           created_at: string
           id: string
           image_url: string | null
           message: string | null
+          reply_to_id: string | null
           user_id: string
         }
         Insert: {
+          content?: string | null
           created_at?: string
           id?: string
           image_url?: string | null
           message?: string | null
+          reply_to_id?: string | null
           user_id: string
         }
         Update: {
+          content?: string | null
           created_at?: string
           id?: string
           image_url?: string | null
           message?: string | null
+          reply_to_id?: string | null
           user_id?: string
         }
         Relationships: []
@@ -523,21 +589,27 @@ export type Database = {
       }
       online_users: {
         Row: {
+          device_id: string | null
           id: string
           is_online: boolean
           last_ping: string
+          updated_at: string
           user_id: string
         }
         Insert: {
+          device_id?: string | null
           id?: string
           is_online?: boolean
           last_ping?: string
+          updated_at?: string
           user_id: string
         }
         Update: {
+          device_id?: string | null
           id?: string
           is_online?: boolean
           last_ping?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -635,7 +707,7 @@ export type Database = {
       premium_bonuses: {
         Row: {
           amount: number
-          bonus_type: string
+          bonus_type: string | null
           claimed_at: string | null
           created_at: string
           days: number | null
@@ -649,7 +721,7 @@ export type Database = {
         }
         Insert: {
           amount?: number
-          bonus_type: string
+          bonus_type?: string | null
           claimed_at?: string | null
           created_at?: string
           days?: number | null
@@ -663,7 +735,7 @@ export type Database = {
         }
         Update: {
           amount?: number
-          bonus_type?: string
+          bonus_type?: string | null
           claimed_at?: string | null
           created_at?: string
           days?: number | null
@@ -688,6 +760,7 @@ export type Database = {
           device_info: string | null
           email: string
           full_name: string | null
+          gender: string | null
           id: string
           is_validated: boolean
           last_seen_at: string | null
@@ -711,6 +784,7 @@ export type Database = {
           device_info?: string | null
           email: string
           full_name?: string | null
+          gender?: string | null
           id?: string
           is_validated?: boolean
           last_seen_at?: string | null
@@ -734,6 +808,7 @@ export type Database = {
           device_info?: string | null
           email?: string
           full_name?: string | null
+          gender?: string | null
           id?: string
           is_validated?: boolean
           last_seen_at?: string | null
