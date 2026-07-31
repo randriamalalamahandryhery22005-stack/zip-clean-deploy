@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { uploadWithProgress } from "@/lib/uploadWithProgress";
 import { toast } from "sonner";
 import { grantSubscriptionCoins } from "@/lib/coins";
 
@@ -179,9 +180,17 @@ const SubscriptionWizard = ({
     setUploading(true);
     const ext = proofFile.name.split(".").pop() || "jpg";
     const path = `${user.id}/${requestId}.${ext}`;
-    const { error: upErr } = await supabase.storage
-      .from("payment-proofs").upload(path, proofFile, { upsert: true });
-    if (upErr) { toast.error("Envoi impossible", { description: upErr.message }); setUploading(false); return; }
+    try {
+      setProofPct(0);
+      await uploadWithProgress("payment-proofs", path, proofFile, {
+        contentType: proofFile.type || "image/jpeg",
+        upsert: true,
+        onProgress: setProofPct,
+      });
+    } catch (e: any) {
+      toast.error("Envoi impossible", { description: e?.message });
+      setUploading(false); setProofPct(null); return;
+    }
     const { data: signed } = await supabase.storage
       .from("payment-proofs").createSignedUrl(path, 60 * 60 * 24 * 365);
     const proofUrl = signed?.signedUrl ?? null;
@@ -199,6 +208,7 @@ const SubscriptionWizard = ({
     });
 
     setUploading(false);
+    setProofPct(null);
     setProofSent(true);
     setStep("track");
     fetchMessages();

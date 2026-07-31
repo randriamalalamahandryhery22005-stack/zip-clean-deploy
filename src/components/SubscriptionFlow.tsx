@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { uploadWithProgress } from "@/lib/uploadWithProgress";
 import { toast } from "sonner";
 import { grantSubscriptionCoins } from "@/lib/coins";
 
@@ -249,8 +250,17 @@ const SubscriptionFlow = ({ gameMode, gameName, onAccessGranted, onCancel, fixed
     const ext = screenshotFile.name.split('.').pop() || 'jpg';
     const path = `${user.id}/${pendingRequestId}.${ext}`;
     
-    const { error: uploadError } = await supabase.storage.from("payment-proofs").upload(path, screenshotFile, { upsert: true });
-    if (uploadError) { toast.error("Erreur d'upload: " + uploadError.message); setUploading(false); return; }
+    try {
+      setProofPct(0);
+      await uploadWithProgress("payment-proofs", path, screenshotFile, {
+        contentType: screenshotFile.type || "image/jpeg",
+        upsert: true,
+        onProgress: setProofPct,
+      });
+    } catch (e: any) {
+      toast.error("Erreur d'upload: " + (e?.message || ""));
+      setUploading(false); setProofPct(null); return;
+    }
     
     // Le bucket "payment-proofs" est privé : on génère une URL signée longue durée
     const { data: urlData } = await supabase.storage
@@ -270,6 +280,7 @@ const SubscriptionFlow = ({ gameMode, gameName, onAccessGranted, onCancel, fixed
       status: "pending",
     });
     
+    setProofPct(null);
     toast.success("Preuve envoyée ! En attente de validation.");
     setStep("waiting");
     setUploading(false);
@@ -284,7 +295,16 @@ const SubscriptionFlow = ({ gameMode, gameName, onAccessGranted, onCancel, fixed
     if (chatImageFile) {
       const ext = chatImageFile.name.split('.').pop() || 'jpg';
       const path = `${user.id}/chat-${Date.now()}.${ext}`;
-      const { error: upErr } = await supabase.storage.from("payment-proofs").upload(path, chatImageFile, { upsert: true });
+      let upErr: unknown = null;
+      try {
+        setProofPct(0);
+        await uploadWithProgress("payment-proofs", path, chatImageFile, {
+          contentType: chatImageFile.type || "image/jpeg",
+          upsert: true,
+          onProgress: setProofPct,
+        });
+      } catch (e) { upErr = e; }
+      setProofPct(null);
       if (!upErr) {
         const { data: urlD } = await supabase.storage
           .from("payment-proofs")
