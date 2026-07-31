@@ -18,6 +18,7 @@ import UserProfileDialog from "@/components/UserProfileDialog";
 import CallHistoryDialog from "@/components/CallHistoryDialog";
 import { useAccountBadges } from "@/hooks/useAccountBadges";
 import { buildEditedContent, parseMessage } from "@/lib/chatMeta";
+import { uploadWithProgress } from "@/lib/uploadWithProgress";
 import {
   ArrowLeft,
   Send,
@@ -119,6 +120,7 @@ export default function Chat() {
   const [loading, setLoading] = useState(true);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  const [uploadPct, setUploadPct] = useState<number | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [replyTo, setReplyTo] = useState<ChatRow | null>(null);
@@ -160,7 +162,7 @@ export default function Chat() {
     const missing = Array.from(new Set(ids)).filter((id) => !profiles[id]);
     if (missing.length === 0) return;
     const { data } = await supabase
-      .from("profiles")
+      .from("public_profiles")
       .select("user_id, name, full_name, avatar_url")
       .in("user_id", missing);
     if (data) {
@@ -314,10 +316,11 @@ export default function Chat() {
       if (imageFile) {
         const ext = imageFile.name.split(".").pop() || "jpg";
         const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-        const { error: upErr } = await supabase.storage
-          .from("chat-files")
-          .upload(path, imageFile, { contentType: imageFile.type || "application/octet-stream", upsert: false });
-        if (upErr) throw upErr;
+        setUploadPct(0);
+        await uploadWithProgress("chat-files", path, imageFile, {
+          contentType: imageFile.type || "application/octet-stream",
+          onProgress: setUploadPct,
+        });
         imagePath = path;
       }
       const { error } = await supabase.from("global_chat_messages").insert({
@@ -332,11 +335,12 @@ export default function Chat() {
       setImagePreview(null);
       setReplyTo(null);
       setTimeout(() => scrollToBottom(true), 30);
-    } catch (e) {
-      toast.error("Échec de l'envoi");
+    } catch (e: any) {
+      toast.error(e?.message ? `Échec de l'envoi : ${e.message}` : "Échec de l'envoi");
       console.error(e);
     } finally {
       setSending(false);
+      setUploadPct(null);
     }
   };
 
@@ -367,10 +371,11 @@ export default function Chat() {
     if (!user) return;
     try {
       const path = `${user.id}/voice-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.webm`;
-      const { error: upErr } = await supabase.storage
-        .from("chat-files")
-        .upload(path, blob, { contentType: blob.type || "audio/webm", upsert: false });
-      if (upErr) throw upErr;
+      setUploadPct(0);
+      await uploadWithProgress("chat-files", path, blob, {
+        contentType: blob.type || "audio/webm",
+        onProgress: setUploadPct,
+      });
       const { error } = await supabase.from("global_chat_messages").insert({
         user_id: user.id,
         content: `🎤 Message vocal · ${Math.max(1, Math.round(durationMs / 1000))}s`,
@@ -383,6 +388,8 @@ export default function Chat() {
     } catch (e) {
       console.error(e);
       toast.error("Échec de l'envoi vocal");
+    } finally {
+      setUploadPct(null);
     }
   };
 
@@ -742,6 +749,20 @@ export default function Chat() {
                   </button>
                 </div>
               )}
+            </div>
+          )}
+          {uploadPct !== null && (
+            <div className="space-y-1">
+              <div className="flex items-center justify-between text-[11px] text-slate-300">
+                <span className="truncate">Envoi du fichier…</span>
+                <span className="font-semibold text-amber-300 tabular-nums">{uploadPct}%</span>
+              </div>
+              <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-amber-500 to-emerald-500 transition-all duration-200"
+                  style={{ width: `${uploadPct}%` }}
+                />
+              </div>
             </div>
           )}
           <div className="flex items-end gap-2">
