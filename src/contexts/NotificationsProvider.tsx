@@ -6,17 +6,13 @@ import { useCall } from "@/contexts/CallContext";
 import { toast } from "sonner";
 import { MessageCircle, Mic, Bell, PhoneMissed } from "lucide-react";
 import IncomingCallOverlay, { type IncomingCall } from "@/components/IncomingCallOverlay";
-import { playNotificationSound, startRingtone } from "@/lib/notificationSound";
+import { playNotificationSound, startRingtone, unlockAudioPlayback } from "@/lib/notificationSound";
 
 
 
 const AUDIO_RX = /\.(webm|ogg|mp3|m4a|wav|aac)(\?|$)/i;
-const SOUNDS = {
-  text: "/sounds/notif-text.wav",
-  voice: "/sounds/notif-voice.wav",
-  call: "/sounds/notif-call.wav",
-  ring: "/sounds/ringtone.wav",
-};
+// Les sons sont synthétisés à la volée (Web Audio) : aucun fichier externe requis.
+const SOUNDS = { text: "message", voice: "voice", call: "call", ring: "ring" } as const;
 
 type Profile = { user_id: string; name?: string | null; full_name?: string | null; avatar_url?: string | null };
 
@@ -37,19 +33,12 @@ export default function NotificationsProvider({ children }: { children: React.Re
   const lastPlayRef = useRef<Record<string, number>>({});
   const seenCallsRef = useRef<Set<string>>(new Set());
 
-  // Preload audio + unlock on first user gesture (autoplay policy)
+  // Débloque l'audio au premier geste utilisateur (politique d'autoplay)
   useEffect(() => {
-    const els: HTMLAudioElement[] = [];
-    (Object.values(SOUNDS)).forEach((s) => {
-      const a = new Audio(s);
-      a.preload = "auto";
-      a.volume = 0.6;
-      els.push(a);
-    });
     const unlock = () => {
       if (unlockedRef.current) return;
       unlockedRef.current = true;
-      els.forEach((a) => { a.play().then(() => { a.pause(); a.currentTime = 0; }).catch(() => {}); });
+      unlockAudioPlayback();
     };
     window.addEventListener("pointerdown", unlock, { once: true });
     window.addEventListener("keydown", unlock, { once: true });
@@ -60,8 +49,7 @@ export default function NotificationsProvider({ children }: { children: React.Re
   }, []);
 
   const play = useCallback((kind: keyof typeof SOUNDS) => {
-    const map = { text: "message", voice: "voice", call: "call", ring: "ring" } as const;
-    playNotificationSound(map[kind]);
+    playNotificationSound(SOUNDS[kind]);
   }, []);
 
   const stopRingRef = useRef<(() => void) | null>(null);
