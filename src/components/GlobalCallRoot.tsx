@@ -42,12 +42,12 @@ export default function GlobalCallRoot() {
     let alive = true;
     (async () => {
       const { data } = await supabase
-        .from("profiles")
+        .from("public_profiles")
         .select("user_id,name,full_name,avatar_url")
         .limit(500);
       if (!alive) return;
       const map: Record<string, Profile> = {};
-      (data || []).forEach((p: Profile) => { map[p.user_id] = p; });
+      (data || []).forEach((p) => { if (p.user_id) map[p.user_id] = p as Profile; });
       setProfiles(map);
     })();
     return () => { alive = false; };

@@ -1338,7 +1338,48 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_profiles: {
+        Row: {
+          avatar_url: string | null
+          country_code: string | null
+          created_at: string | null
+          full_name: string | null
+          gender: string | null
+          is_validated: boolean | null
+          last_seen_at: string | null
+          name: string | null
+          region: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          country_code?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          gender?: string | null
+          is_validated?: boolean | null
+          last_seen_at?: string | null
+          name?: string | null
+          region?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          country_code?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          gender?: string | null
+          is_validated?: boolean | null
+          last_seen_at?: string | null
+          name?: string | null
+          region?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {

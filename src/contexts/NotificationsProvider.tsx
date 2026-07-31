@@ -129,7 +129,7 @@ export default function NotificationsProvider({ children }: { children: React.Re
       const kind: "text" | "voice" = isVoice ? "voice" : "text";
 
       const { data: prof } = await supabase
-        .from("profiles")
+        .from("public_profiles")
         .select("user_id,name,full_name,avatar_url")
         .eq("user_id", msg.user_id)
         .maybeSingle();
@@ -218,7 +218,7 @@ export default function NotificationsProvider({ children }: { children: React.Re
         seenCallsRef.current.add(callId);
 
         const { data: prof } = await supabase
-          .from("profiles")
+          .from("public_profiles")
           .select("user_id,name,full_name,avatar_url")
           .eq("user_id", callerId)
           .maybeSingle();
