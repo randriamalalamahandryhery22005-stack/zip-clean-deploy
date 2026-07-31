@@ -89,6 +89,7 @@ const SubscriptionFlow = ({ gameMode, gameName, onAccessGranted, onCancel, fixed
   const [screenshotFile, setScreenshotFile] = useState<File | null>(null);
   const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [proofPct, setProofPct] = useState<number | null>(null);
   const [premiumCode, setPremiumCode] = useState("");
   const [codeInput, setCodeInput] = useState("");
   const [pendingRequestId, setPendingRequestId] = useState<string | null>(null);
@@ -675,6 +676,17 @@ const SubscriptionFlow = ({ gameMode, gameName, onAccessGranted, onCancel, fixed
                 </div>
               )}
             </label>
+            {proofPct !== null && (
+              <div className="space-y-1 mb-2">
+                <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                  <span>Transfert de la preuve…</span>
+                  <span className="font-semibold tabular-nums">{proofPct}%</span>
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+                  <div className="h-full rounded-full bg-primary transition-all duration-200" style={{ width: `${proofPct}%` }} />
+                </div>
+              </div>
+            )}
             <Button variant="premium" className="w-full h-13 text-base" onClick={handleUpload} disabled={!screenshotFile || uploading}>
               {uploading ? "Envoi en cours..." : "Envoyer la capture"}
             </Button>

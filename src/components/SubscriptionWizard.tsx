@@ -58,6 +58,7 @@ const SubscriptionWizard = ({
   const [proofFile, setProofFile] = useState<File | null>(null);
   const [proofPreview, setProofPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [proofPct, setProofPct] = useState<number | null>(null);
   const [proofSent, setProofSent] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [chatText, setChatText] = useState("");
@@ -446,6 +447,17 @@ const SubscriptionWizard = ({
             <Button variant="secondary" className="h-12 px-4" onClick={() => setStep("pay")}>
               <ArrowLeft className="w-4 h-4" />
             </Button>
+            {proofPct !== null && (
+              <div className="space-y-1 mb-2">
+                <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                  <span>Transfert de la preuve…</span>
+                  <span className="font-semibold tabular-nums">{proofPct}%</span>
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+                  <div className="h-full rounded-full bg-primary transition-all duration-200" style={{ width: `${proofPct}%` }} />
+                </div>
+              </div>
+            )}
             <Button variant="premium" className="flex-1 h-12 font-bold" onClick={sendProof} disabled={!proofFile || uploading}>
               {uploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
               {uploading ? "Envoi…" : "Envoyer la preuve"}
