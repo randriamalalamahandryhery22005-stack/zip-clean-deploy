@@ -81,33 +81,45 @@ export type Database = {
       }
       app_config: {
         Row: {
-          config: Json
+          config: Json | null
+          config_key: string | null
+          config_value: Json | null
           created_at: string
           created_by: string | null
           id: string
           is_active: boolean
           notes: string | null
           prompt: string | null
+          updated_at: string
+          updated_by: string | null
           version: number
         }
         Insert: {
-          config?: Json
+          config?: Json | null
+          config_key?: string | null
+          config_value?: Json | null
           created_at?: string
           created_by?: string | null
           id?: string
           is_active?: boolean
           notes?: string | null
           prompt?: string | null
-          version: number
+          updated_at?: string
+          updated_by?: string | null
+          version?: number
         }
         Update: {
-          config?: Json
+          config?: Json | null
+          config_key?: string | null
+          config_value?: Json | null
           created_at?: string
           created_by?: string | null
           id?: string
           is_active?: boolean
           notes?: string | null
           prompt?: string | null
+          updated_at?: string
+          updated_by?: string | null
           version?: number
         }
         Relationships: []
@@ -182,53 +194,42 @@ export type Database = {
           message_id?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "chat_message_reactions_message_id_fkey"
-            columns: ["message_id"]
-            isOneToOne: false
-            referencedRelation: "global_chat_messages"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       chat_message_reads: {
         Row: {
+          created_at: string
           id: string
           message_id: string
           read_at: string
           user_id: string
         }
         Insert: {
+          created_at?: string
           id?: string
           message_id: string
           read_at?: string
           user_id: string
         }
         Update: {
+          created_at?: string
           id?: string
           message_id?: string
           read_at?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "chat_message_reads_message_id_fkey"
-            columns: ["message_id"]
-            isOneToOne: false
-            referencedRelation: "global_chat_messages"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       chat_messages: {
         Row: {
           admin_response: string | null
+          content: string | null
           created_at: string
           game_mode: string
           id: string
           image_url: string | null
           message: string | null
+          reply_to_id: string | null
           responded_at: string | null
           responded_by: string | null
           status: string
@@ -236,11 +237,13 @@ export type Database = {
         }
         Insert: {
           admin_response?: string | null
+          content?: string | null
           created_at?: string
           game_mode: string
           id?: string
           image_url?: string | null
           message?: string | null
+          reply_to_id?: string | null
           responded_at?: string | null
           responded_by?: string | null
           status?: string
@@ -248,11 +251,13 @@ export type Database = {
         }
         Update: {
           admin_response?: string | null
+          content?: string | null
           created_at?: string
           game_mode?: string
           id?: string
           image_url?: string | null
           message?: string | null
+          reply_to_id?: string | null
           responded_at?: string | null
           responded_by?: string | null
           status?: string
@@ -377,26 +382,32 @@ export type Database = {
         Row: {
           cache_key: string
           created_at: string
+          data: Json
           expires_at: string
-          payload: Json
+          id: string
+          payload: Json | null
         }
         Insert: {
           cache_key: string
           created_at?: string
+          data: Json
           expires_at: string
-          payload: Json
+          id?: string
+          payload?: Json | null
         }
         Update: {
           cache_key?: string
           created_at?: string
+          data?: Json
           expires_at?: string
-          payload?: Json
+          id?: string
+          payload?: Json | null
         }
         Relationships: []
       }
       game_access: {
         Row: {
-          days_requested: number
+          days_requested: number | null
           expires_at: string | null
           game_mode: string
           granted_at: string
@@ -404,12 +415,12 @@ export type Database = {
           id: string
           is_active: boolean
           payment_proof_url: string | null
-          price_amount: number
+          price_amount: number | null
           rejection_reason: string | null
           user_id: string
         }
         Insert: {
-          days_requested?: number
+          days_requested?: number | null
           expires_at?: string | null
           game_mode: string
           granted_at?: string
@@ -417,12 +428,12 @@ export type Database = {
           id?: string
           is_active?: boolean
           payment_proof_url?: string | null
-          price_amount?: number
+          price_amount?: number | null
           rejection_reason?: string | null
           user_id: string
         }
         Update: {
-          days_requested?: number
+          days_requested?: number | null
           expires_at?: string | null
           game_mode?: string
           granted_at?: string
@@ -430,7 +441,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           payment_proof_url?: string | null
-          price_amount?: number
+          price_amount?: number | null
           rejection_reason?: string | null
           user_id?: string
         }
@@ -463,62 +474,77 @@ export type Database = {
       gen_store_items: {
         Row: {
           body: string | null
-          category: string
+          category: string | null
           created_at: string
           created_by: string | null
-          description: string
+          description: string | null
           download_count: number
-          file_name: string
-          file_path: string
-          file_size: number
+          file_name: string | null
+          file_path: string | null
+          file_size: number | null
           file_url: string | null
           id: string
+          image_url: string | null
+          is_active: boolean
           is_published: boolean
           link_url: string | null
           mime_type: string | null
-          post_type: string
+          name: string | null
+          post_type: string | null
+          price_coins: number
+          stock: number | null
           thumbnail_url: string | null
-          title: string
+          title: string | null
           updated_at: string
         }
         Insert: {
           body?: string | null
-          category: string
+          category?: string | null
           created_at?: string
           created_by?: string | null
-          description: string
+          description?: string | null
           download_count?: number
-          file_name: string
-          file_path: string
-          file_size?: number
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
           file_url?: string | null
           id?: string
+          image_url?: string | null
+          is_active?: boolean
           is_published?: boolean
           link_url?: string | null
           mime_type?: string | null
-          post_type?: string
+          name?: string | null
+          post_type?: string | null
+          price_coins?: number
+          stock?: number | null
           thumbnail_url?: string | null
-          title: string
+          title?: string | null
           updated_at?: string
         }
         Update: {
           body?: string | null
-          category?: string
+          category?: string | null
           created_at?: string
           created_by?: string | null
-          description?: string
+          description?: string | null
           download_count?: number
-          file_name?: string
-          file_path?: string
-          file_size?: number
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
           file_url?: string | null
           id?: string
+          image_url?: string | null
+          is_active?: boolean
           is_published?: boolean
           link_url?: string | null
           mime_type?: string | null
-          post_type?: string
+          name?: string | null
+          post_type?: string | null
+          price_coins?: number
+          stock?: number | null
           thumbnail_url?: string | null
-          title?: string
+          title?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -538,7 +564,7 @@ export type Database = {
           created_at?: string
           id?: string
           item_id: string
-          rating: number
+          rating?: number
           updated_at?: string
           user_id: string
         }
@@ -551,50 +577,37 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "gen_store_reviews_item_id_fkey"
-            columns: ["item_id"]
-            isOneToOne: false
-            referencedRelation: "gen_store_items"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       global_chat_messages: {
         Row: {
-          content: string
+          content: string | null
           created_at: string
           id: string
           image_url: string | null
+          message: string | null
           reply_to_id: string | null
           user_id: string
         }
         Insert: {
-          content: string
+          content?: string | null
           created_at?: string
           id?: string
           image_url?: string | null
+          message?: string | null
           reply_to_id?: string | null
           user_id: string
         }
         Update: {
-          content?: string
+          content?: string | null
           created_at?: string
           id?: string
           image_url?: string | null
+          message?: string | null
           reply_to_id?: string | null
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "global_chat_messages_reply_to_id_fkey"
-            columns: ["reply_to_id"]
-            isOneToOne: false
-            referencedRelation: "global_chat_messages"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       live_fixtures: {
         Row: {
@@ -602,17 +615,25 @@ export type Database = {
           away_id: number | null
           away_logo: string | null
           away_name: string | null
+          away_score: number | null
+          away_team: string | null
           country: string | null
+          data: Json | null
           fixture_id: number
           home_goals: number | null
           home_id: number | null
           home_logo: string | null
           home_name: string | null
+          home_score: number | null
+          home_team: string | null
+          id: string
           league_id: number | null
           league_logo: string | null
           league_name: string | null
           minute: number | null
-          raw: Json
+          raw: Json | null
+          starts_at: string | null
+          status: string | null
           status_long: string | null
           status_short: string | null
           updated_at: string
@@ -622,17 +643,25 @@ export type Database = {
           away_id?: number | null
           away_logo?: string | null
           away_name?: string | null
+          away_score?: number | null
+          away_team?: string | null
           country?: string | null
+          data?: Json | null
           fixture_id: number
           home_goals?: number | null
           home_id?: number | null
           home_logo?: string | null
           home_name?: string | null
+          home_score?: number | null
+          home_team?: string | null
+          id?: string
           league_id?: number | null
           league_logo?: string | null
           league_name?: string | null
           minute?: number | null
-          raw: Json
+          raw?: Json | null
+          starts_at?: string | null
+          status?: string | null
           status_long?: string | null
           status_short?: string | null
           updated_at?: string
@@ -642,17 +671,25 @@ export type Database = {
           away_id?: number | null
           away_logo?: string | null
           away_name?: string | null
+          away_score?: number | null
+          away_team?: string | null
           country?: string | null
+          data?: Json | null
           fixture_id?: number
           home_goals?: number | null
           home_id?: number | null
           home_logo?: string | null
           home_name?: string | null
+          home_score?: number | null
+          home_team?: string | null
+          id?: string
           league_id?: number | null
           league_logo?: string | null
           league_name?: string | null
           minute?: number | null
-          raw?: Json
+          raw?: Json | null
+          starts_at?: string | null
+          status?: string | null
           status_long?: string | null
           status_short?: string | null
           updated_at?: string
@@ -665,6 +702,8 @@ export type Database = {
           device_info: string | null
           event_type: string
           id: string
+          ip_address: string | null
+          location: string | null
           session_id: string | null
           user_id: string
         }
@@ -673,6 +712,8 @@ export type Database = {
           device_info?: string | null
           event_type: string
           id?: string
+          ip_address?: string | null
+          location?: string | null
           session_id?: string | null
           user_id: string
         }
@@ -681,6 +722,8 @@ export type Database = {
           device_info?: string | null
           event_type?: string
           id?: string
+          ip_address?: string | null
+          location?: string | null
           session_id?: string | null
           user_id?: string
         }
@@ -779,18 +822,24 @@ export type Database = {
       online_users: {
         Row: {
           device_id: string | null
+          id: string
+          is_online: boolean
           last_ping: string
           updated_at: string
           user_id: string
         }
         Insert: {
           device_id?: string | null
+          id?: string
+          is_online?: boolean
           last_ping?: string
           updated_at?: string
           user_id: string
         }
         Update: {
           device_id?: string | null
+          id?: string
+          is_online?: boolean
           last_ping?: string
           updated_at?: string
           user_id?: string
@@ -835,30 +884,30 @@ export type Database = {
           created_at: string
           custom_prediction_id: string | null
           id: string
-          input_params: Json
+          input_params: Json | null
           mode: string
           reliability_avg: number | null
-          results: Json
+          results: Json | null
           user_id: string
         }
         Insert: {
           created_at?: string
           custom_prediction_id?: string | null
           id?: string
-          input_params?: Json
+          input_params?: Json | null
           mode: string
           reliability_avg?: number | null
-          results?: Json
+          results?: Json | null
           user_id: string
         }
         Update: {
           created_at?: string
           custom_prediction_id?: string | null
           id?: string
-          input_params?: Json
+          input_params?: Json | null
           mode?: string
           reliability_avg?: number | null
-          results?: Json
+          results?: Json | null
           user_id?: string
         }
         Relationships: []
@@ -895,9 +944,12 @@ export type Database = {
       }
       premium_bonuses: {
         Row: {
+          amount: number
+          bonus_type: string | null
+          claimed_at: string | null
           created_at: string
-          days: number
-          expires_at: string
+          days: number | null
+          expires_at: string | null
           granted_at: string
           granted_by: string | null
           id: string
@@ -906,9 +958,12 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          amount?: number
+          bonus_type?: string | null
+          claimed_at?: string | null
           created_at?: string
-          days: number
-          expires_at: string
+          days?: number | null
+          expires_at?: string | null
           granted_at?: string
           granted_by?: string | null
           id?: string
@@ -917,9 +972,12 @@ export type Database = {
           user_id: string
         }
         Update: {
+          amount?: number
+          bonus_type?: string | null
+          claimed_at?: string | null
           created_at?: string
-          days?: number
-          expires_at?: string
+          days?: number | null
+          expires_at?: string | null
           granted_at?: string
           granted_by?: string | null
           id?: string
@@ -932,6 +990,7 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
           birth_date: string | null
           country_code: string | null
           created_at: string
@@ -956,6 +1015,7 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
           birth_date?: string | null
           country_code?: string | null
           created_at?: string
@@ -980,6 +1040,7 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
           birth_date?: string | null
           country_code?: string | null
           created_at?: string
@@ -1064,40 +1125,52 @@ export type Database = {
       user_coins: {
         Row: {
           balance: number
+          coins: number
           consumption_rate_per_hour: number
           created_at: string
+          id: string
           last_consumed_at: string | null
           plan_expires_at: string | null
           plan_started_at: string | null
-          plan_type: string
+          plan_type: string | null
           total_consumed: number
+          total_earned: number
           total_granted: number
+          total_spent: number
           updated_at: string
           user_id: string
         }
         Insert: {
           balance?: number
+          coins?: number
           consumption_rate_per_hour?: number
           created_at?: string
+          id?: string
           last_consumed_at?: string | null
           plan_expires_at?: string | null
           plan_started_at?: string | null
-          plan_type?: string
+          plan_type?: string | null
           total_consumed?: number
+          total_earned?: number
           total_granted?: number
+          total_spent?: number
           updated_at?: string
           user_id: string
         }
         Update: {
           balance?: number
+          coins?: number
           consumption_rate_per_hour?: number
           created_at?: string
+          id?: string
           last_consumed_at?: string | null
           plan_expires_at?: string | null
           plan_started_at?: string | null
-          plan_type?: string
+          plan_type?: string | null
           total_consumed?: number
+          total_earned?: number
           total_granted?: number
+          total_spent?: number
           updated_at?: string
           user_id?: string
         }
@@ -1109,7 +1182,8 @@ export type Database = {
           game_name: string | null
           id: string
           points: number
-          reason: string
+          reason: string | null
+          updated_at: string
           user_id: string
         }
         Insert: {
@@ -1117,7 +1191,8 @@ export type Database = {
           game_name?: string | null
           id?: string
           points?: number
-          reason?: string
+          reason?: string | null
+          updated_at?: string
           user_id: string
         }
         Update: {
@@ -1125,7 +1200,8 @@ export type Database = {
           game_name?: string | null
           id?: string
           points?: number
-          reason?: string
+          reason?: string | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -1265,11 +1341,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      app_access_code_required: { Args: never; Returns: boolean }
-      consume_user_coins: { Args: never; Returns: undefined }
-      get_active_device: { Args: { _user_id: string }; Returns: string }
-      get_total_revenue: { Args: never; Returns: number }
-      has_active_premium_bonus: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1281,9 +1352,6 @@ export type Database = {
         Args: { _conv: string; _user: string }
         Returns: boolean
       }
-      show_limit: { Args: never; Returns: number }
-      show_trgm: { Args: { "": string }; Returns: string[] }
-      verify_app_access_code: { Args: { _code: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "user"
