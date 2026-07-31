@@ -3,7 +3,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import AccountBadges from "@/components/AccountBadges";
 import { Calendar, Globe2, Mail, MapPin, ShieldCheck, User2, Cake, Phone, Loader2 } from "lucide-react";
-import { countryName } from "@/lib/countries";
+import { COUNTRIES } from "@/lib/countries";
+
+const countryName = (code?: string | null) =>
+  (COUNTRIES as Array<{ code: string; name: string }>).find((c) => c.code === code)?.name ?? null;
 
 type FullProfile = {
   user_id: string;
