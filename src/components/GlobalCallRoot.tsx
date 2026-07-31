@@ -47,7 +47,7 @@ export default function GlobalCallRoot() {
         .limit(500);
       if (!alive) return;
       const map: Record<string, Profile> = {};
-      (data || []).forEach((p: Profile) => { map[p.user_id] = p; });
+      (data || []).forEach((p) => { if (p.user_id) map[p.user_id] = p as Profile; });
       setProfiles(map);
     })();
     return () => { alive = false; };
