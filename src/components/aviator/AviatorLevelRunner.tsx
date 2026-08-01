@@ -405,6 +405,11 @@ const ResultCard = ({
         </div>
       </div>
 
+      {standalone && (
+        <p className="relative mt-2 text-[10px] text-white/50 leading-relaxed">
+          Indice commun aux résultats principaux — aucun horaire associé.
+        </p>
+      )}
 
       <div className="relative mt-3 grid grid-cols-3 gap-2">
         <Stat label="Confiance" value={`${row.confidence}%`} />
