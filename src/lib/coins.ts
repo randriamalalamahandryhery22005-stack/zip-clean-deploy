@@ -68,11 +68,11 @@ export async function ensureCoinsRow(userId: string) {
     .eq("user_id", userId)
     .maybeSingle();
   if (!data) {
-    await supabase.from("user_coins").insert({
-      user_id: userId,
-      balance: 0,
-      plan_type: "free",
-    });
+    await supabase.from("user_coins").upsert(
+      { user_id: userId, balance: 0, plan_type: "free" },
+      { onConflict: "user_id", ignoreDuplicates: true },
+    );
+
   }
 }
 
