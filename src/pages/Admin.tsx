@@ -349,10 +349,10 @@ const Admin = () => {
     if (!rewardUserId) { toast.error("Sélectionnez un utilisateur"); return; }
     const days = parseInt(rewardDays) || 7;
     const expiresAt = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
-    const { error } = await supabase.from("game_access").insert({
+    const { error } = await supabase.from("game_access").upsert({
       user_id: rewardUserId, game_mode: rewardGame, is_active: true,
       granted_by: user?.id, expires_at: expiresAt,
-    });
+    }, { onConflict: "user_id,game_mode" });
     if (error) { toast.error("Erreur: " + error.message); return; }
     // Send notification
     await supabase.from("notifications").insert({

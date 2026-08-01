@@ -153,14 +153,14 @@ const SubscriptionWizard = ({
     if (!user) { toast.error("Connectez-vous pour continuer"); return; }
     if (requestId) { setStep("pay"); return; }
     setCreating(true);
-    const { data, error } = await supabase.from("game_access").insert({
+    const { data, error } = await supabase.from("game_access").upsert({
       user_id: user.id,
       game_mode: gameMode,
       is_active: false,
       expires_at: lifetime ? null : new Date(Date.now() + days * 86400000).toISOString(),
       price_amount: price,
       days_requested: lifetime ? 0 : days,
-    } as any).select().single();
+    } as any, { onConflict: "user_id,game_mode" }).select().single();
     setCreating(false);
     if (error) { toast.error("Erreur", { description: error.message }); return; }
     setRequestId(data.id);

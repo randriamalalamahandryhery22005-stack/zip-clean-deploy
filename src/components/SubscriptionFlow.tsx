@@ -197,14 +197,14 @@ const SubscriptionFlow = ({ gameMode, gameName, onAccessGranted, onCancel, fixed
       total = d + bonus;
       computedPrice = Math.round(d * (30000 / 31));
     }
-    const { data, error } = await supabase.from("game_access").insert({
+    const { data, error } = await supabase.from("game_access").upsert({
       user_id: user.id,
       game_mode: gameMode,
       is_active: false,
       expires_at: isLifetime ? null : new Date(Date.now() + total * 86400000).toISOString(),
       price_amount: computedPrice,
       days_requested: d,
-    } as any).select().single();
+    } as any, { onConflict: "user_id,game_mode" }).select().single();
     if (error) { toast.error("Erreur: " + error.message); setRequesting(false); return; }
     setPendingRequestId(data.id);
     setStep("method");

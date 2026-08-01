@@ -376,17 +376,21 @@ const ResultCard = ({
           <km.Icon className="w-2.5 h-2.5" /> {km.label}
         </span>
         <span className="text-[11px] font-bold text-white/85">{row.label}</span>
-        {row.offsetLabel && <span className="ml-auto text-[9px] text-white/40 font-mono">{row.offsetLabel}</span>}
+        {!standalone && row.offsetLabel && (
+          <span className="ml-auto text-[9px] text-white/40 font-mono">{row.offsetLabel}</span>
+        )}
       </div>
 
-      <div className="relative grid grid-cols-2 gap-3">
-        <div className="rounded-2xl border border-white/8 bg-black/35 px-3 py-3 text-center">
-          <div className="flex items-center justify-center gap-1 text-white/45 mb-1">
-            <Timer className="w-3 h-3" />
-            <span className="text-[8px] uppercase tracking-widest font-bold">Heure</span>
+      <div className={`relative grid gap-3 ${standalone ? "grid-cols-1" : "grid-cols-2"}`}>
+        {!standalone && (
+          <div className="rounded-2xl border border-white/8 bg-black/35 px-3 py-3 text-center">
+            <div className="flex items-center justify-center gap-1 text-white/45 mb-1">
+              <Timer className="w-3 h-3" />
+              <span className="text-[8px] uppercase tracking-widest font-bold">Heure</span>
+            </div>
+            <p className="text-xl font-black text-white font-mono tabular-nums leading-none">{row.time}</p>
           </div>
-          <p className="text-xl font-black text-white font-mono tabular-nums leading-none">{row.time}</p>
-        </div>
+        )}
         <div
           className="rounded-2xl border px-3 py-3 text-center"
           style={{ borderColor: `${km.color}44`, background: `${km.color}14` }}
@@ -400,6 +404,12 @@ const ResultCard = ({
           </p>
         </div>
       </div>
+
+      {standalone && (
+        <p className="relative mt-2 text-[10px] text-white/50 leading-relaxed">
+          Indice commun aux résultats principaux — aucun horaire associé.
+        </p>
+      )}
 
       <div className="relative mt-3 grid grid-cols-3 gap-2">
         <Stat label="Confiance" value={`${row.confidence}%`} />
