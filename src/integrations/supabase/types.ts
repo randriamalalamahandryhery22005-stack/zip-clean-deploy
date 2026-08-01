@@ -1382,6 +1382,7 @@ export type Database = {
       }
     }
     Functions: {
+      app_access_code_required: { Args: never; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1393,6 +1394,7 @@ export type Database = {
         Args: { _conv: string; _user: string }
         Returns: boolean
       }
+      verify_app_access_code: { Args: { _code: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "user"
